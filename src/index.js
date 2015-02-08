@@ -20,6 +20,20 @@ FastHash.prototype.has = function(key) {
     return has(this.__hash, key);
 };
 
+FastHash.prototype.clear = function() {
+    var hash = this.__hash,
+        key;
+
+    for (key in hash) {
+        if (has(hash, key)) {
+            delete hash[key];
+        }
+    }
+    this.__array.length = 0;
+
+    return this;
+};
+
 FastHash.prototype.add = function() {
     var i = -1,
         il = arguments.length - 1;

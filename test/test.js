@@ -60,4 +60,20 @@ describe("FastHash", function() {
             assert.equal(hash.__array.length, 0);
         });
     });
+    describe("#clear()", function() {
+        it("should remove all values from hash", function() {
+            var hash = new FastHash("name"),
+                bob = {
+                    name: "Bob"
+                },
+                frank = {
+                    name: "Frank"
+                };
+
+            hash.add(bob, frank);
+            hash.clear();
+
+            assert.equal(hash.__array.length, 0);
+        });
+    });
 });
