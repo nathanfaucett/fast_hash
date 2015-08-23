@@ -1,6 +1,11 @@
 var has = require("has"),
     indexOf = require("index_of"),
-    forEach = require("for_each");
+    isNullOrUndefined = require("is_null_or_undefined"),
+    arrayForEach = require("array-for_each"),
+    fastBindThis = require("fast_bind_this");
+
+
+var FastHashPrototype;
 
 
 module.exports = FastHash;
@@ -11,25 +16,29 @@ function FastHash(key) {
     this.__array = [];
     this.__hash = {};
 }
+FastHashPrototype = FastHash.prototype;
 
-FastHash.prototype.get = function(key) {
+FastHashPrototype.get = function(key) {
     return this.__hash[key];
 };
 
-FastHash.prototype.has = function(key) {
+FastHashPrototype.has = function(key) {
     return has(this.__hash, key);
 };
 
-FastHash.prototype.count = function() {
+FastHashPrototype.size = function() {
     return this.__array.length;
 };
 
-FastHash.prototype.clear = function() {
-    var hash = this.__hash,
+FastHashPrototype.count = FastHashPrototype.size;
+
+FastHashPrototype.clear = function() {
+    var localHas = has,
+        hash = this.__hash,
         key;
 
     for (key in hash) {
-        if (has(hash, key)) {
+        if (localHas(hash, key)) {
             delete hash[key];
         }
     }
@@ -38,7 +47,7 @@ FastHash.prototype.clear = function() {
     return this;
 };
 
-FastHash.prototype.add = function() {
+FastHashPrototype.add = function() {
     var i = -1,
         il = arguments.length - 1;
 
@@ -60,7 +69,7 @@ function FastHash_add(_this, value) {
     }
 }
 
-FastHash.prototype.remove = function() {
+FastHashPrototype.remove = function() {
     var i = -1,
         il = arguments.length - 1;
 
@@ -82,6 +91,6 @@ function FastHash_remove(_this, value) {
     }
 }
 
-FastHash.prototype.forEach = function(callback, thisArg) {
-    return forEach(this.__array, callback, thisArg);
+FastHashPrototype.forEach = function(callback, thisArg) {
+    return arrayForEach(this.__array, isNullOrUndefined(thisArg) ? callback : fastBindThis(callback, thisArg, 3));
 };
