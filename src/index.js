@@ -1,8 +1,8 @@
-var has = require("has"),
-    indexOf = require("index_of"),
-    isNullOrUndefined = require("is_null_or_undefined"),
-    arrayForEach = require("array-for_each"),
-    fastBindThis = require("fast_bind_this");
+var has = require("@nathanfaucett/has"),
+    indexOf = require("@nathanfaucett/index_of"),
+    isNullOrUndefined = require("@nathanfaucett/is_null_or_undefined"),
+    arrayForEach = require("@nathanfaucett/array-for_each"),
+    fastBindThis = require("@nathanfaucett/fast_bind_this");
 
 
 var FastHashPrototype;
