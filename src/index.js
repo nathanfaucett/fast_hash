@@ -1,8 +1,6 @@
 var has = require("@nathanfaucett/has"),
     indexOf = require("@nathanfaucett/index_of"),
-    isNullOrUndefined = require("@nathanfaucett/is_null_or_undefined"),
-    arrayForEach = require("@nathanfaucett/array-for_each"),
-    fastBindThis = require("@nathanfaucett/fast_bind_this");
+    defineProperty = require("@nathanfaucett/define_property");
 
 
 var FastHashPrototype;
@@ -12,29 +10,35 @@ module.exports = FastHash;
 
 
 function FastHash(key) {
-    this.__key = key;
-    this.__array = [];
-    this.__hash = {};
+    this._key = key;
+    this._array = [];
+    this._hash = {};
 }
 FastHashPrototype = FastHash.prototype;
 
 FastHashPrototype.get = function(key) {
-    return this.__hash[key];
+    return this._hash[key];
 };
 
 FastHashPrototype.has = function(key) {
-    return has(this.__hash, key);
+    return has(this._hash, key);
 };
 
 FastHashPrototype.size = function() {
-    return this.__array.length;
+    return this._array.length;
 };
 
 FastHashPrototype.count = FastHashPrototype.size;
 
+if (defineProperty.hasGettersSetters) {
+    defineProperty(FastHashPrototype, "length", {
+        get: FastHashPrototype.size
+    });
+}
+
 FastHashPrototype.clear = function() {
     var localHas = has,
-        hash = this.__hash,
+        hash = this._hash,
         key;
 
     for (key in hash) {
@@ -42,9 +46,16 @@ FastHashPrototype.clear = function() {
             delete hash[key];
         }
     }
-    this.__array.length = 0;
+    this._array.length = 0;
 
     return this;
+};
+
+FastHashPrototype.getArray = function() {
+    return this._array;
+};
+FastHashPrototype.getObject = function() {
+    return this._hash;
 };
 
 FastHashPrototype.add = function() {
@@ -59,13 +70,15 @@ FastHashPrototype.add = function() {
 };
 
 function FastHash_add(_this, value) {
-    var array = _this.__array,
-        hash = _this.__hash,
-        key = value[_this.__key];
+    var array = _this._array,
+        hash = _this._hash,
+        key = value[_this._key];
 
     if (!has(hash, key)) {
         hash[key] = value;
         array[array.length] = value;
+    } else {
+        throw new Error("trying to add duplicate keys " + key);
     }
 }
 
@@ -81,16 +94,14 @@ FastHashPrototype.remove = function() {
 };
 
 function FastHash_remove(_this, value) {
-    var array = _this.__array,
-        hash = _this.__hash,
-        key = value[_this.__key];
+    var array = _this._array,
+        hash = _this._hash,
+        key = value[_this._key];
 
     if (has(hash, key)) {
         delete hash[key];
         array.splice(indexOf(value), 1);
+    } else {
+        throw new Error("trying to add duplicate keys " + key);
     }
 }
-
-FastHashPrototype.forEach = function(callback, thisArg) {
-    return arrayForEach(this.__array, isNullOrUndefined(thisArg) ? callback : fastBindThis(callback, thisArg, 3));
-};

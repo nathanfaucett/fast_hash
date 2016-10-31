@@ -39,7 +39,7 @@ tape("FastHash #add(...values) should add values to hash that contain key matchi
 
     hash.add(bob, frank);
 
-    assert.equal(hash.__array.length, 2);
+    assert.equal(hash.size(), 2);
     assert.end();
 });
 
@@ -55,7 +55,7 @@ tape("FastHash #remove(...values) should remove values from hash that contain ke
     hash.add(bob, frank);
     hash.remove(bob, frank);
 
-    assert.equal(hash.__array.length, 0);
+    assert.equal(hash.size(), 0);
     assert.end();
 });
 
@@ -71,6 +71,6 @@ tape("FastHash #clear() should remove all values from hash", function(assert) {
     hash.add(bob, frank);
     hash.clear();
 
-    assert.equal(hash.__array.length, 0);
+    assert.equal(hash.size(), 0);
     assert.end();
 });
